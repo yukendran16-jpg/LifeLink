@@ -1,0 +1,250 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Base authenticated user profile storing role and identification.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 150 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "enum": ["DONOR", "HOSPITAL", "ADMIN"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Donor": {
+      "title": "Donor",
+      "description": "Registered blood donor details, availability, and location data.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "bloodGroup": { "type": "string", "enum": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
+        "city": { "type": "string", "maxLength": 100 },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "dateOfBirth": { "type": "string", "maxLength": 20 },
+        "availabilityStatus": { "type": "string", "enum": ["AVAILABLE", "TEMPORARILY_UNAVAILABLE", "UNAVAILABLE_UNTIL_DATE"] },
+        "unavailableUntil": { "type": "string", "maxLength": 30 },
+        "lastDonationDate": { "type": "string", "maxLength": 30 },
+        "totalDonations": { "type": "number" },
+        "isVerified": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "fullName", "email", "bloodGroup", "city", "availabilityStatus"]
+    },
+    "Hospital": {
+      "title": "Hospital",
+      "description": "Registered hospital facility profile with verification status and license.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "hospitalName": { "type": "string", "maxLength": 150 },
+        "licenseNumber": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "address": { "type": "string", "maxLength": 200 },
+        "city": { "type": "string", "maxLength": 100 },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "verificationStatus": { "type": "string", "enum": ["PENDING", "VERIFIED", "REJECTED"] },
+        "verifiedAt": { "type": "string", "maxLength": 40 },
+        "verifiedBy": { "type": "string", "maxLength": 128 },
+        "verificationNotes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "hospitalName", "licenseNumber", "email", "phone", "address", "city", "verificationStatus"]
+    },
+    "BloodRequest": {
+      "title": "BloodRequest",
+      "description": "Emergency or standard blood requisition placed by an authorized hospital.",
+      "type": "object",
+      "properties": {
+        "hospitalId": { "type": "string", "maxLength": 128 },
+        "hospitalName": { "type": "string", "maxLength": 150 },
+        "bloodGroup": { "type": "string", "enum": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
+        "unitsRequired": { "type": "number" },
+        "unitsFulfilled": { "type": "number" },
+        "urgency": { "type": "string", "enum": ["NORMAL", "URGENT", "CRITICAL"] },
+        "status": { "type": "string", "enum": ["OPEN", "MATCHING", "PARTIALLY_FULFILLED", "FULFILLED", "ESCALATED", "EXPIRED", "CANCELLED"] },
+        "requiredBy": { "type": "string", "maxLength": 40 },
+        "hospitalCity": { "type": "string", "maxLength": 100 },
+        "hospitalAddress": { "type": "string", "maxLength": 200 },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "contactPhone": { "type": "string", "maxLength": 20 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "outreachWave": { "type": "number" },
+        "escalatedAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["hospitalId", "hospitalName", "bloodGroup", "unitsRequired", "urgency", "status", "requiredBy"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "Targeted outreach match associating a blood request with a potentially suitable donor.",
+      "type": "object",
+      "properties": {
+        "requestId": { "type": "string", "maxLength": 128 },
+        "hospitalId": { "type": "string", "maxLength": 128 },
+        "hospitalName": { "type": "string", "maxLength": 150 },
+        "donorId": { "type": "string", "maxLength": 128 },
+        "donorName": { "type": "string", "maxLength": 100 },
+        "requestedBloodGroup": { "type": "string", "maxLength": 10 },
+        "donorBloodGroup": { "type": "string", "maxLength": 10 },
+        "urgency": { "type": "string", "enum": ["NORMAL", "URGENT", "CRITICAL"] },
+        "compatibilityScore": { "type": "number" },
+        "scoreBreakdown": { "type": "object" },
+        "distanceKm": { "type": "number" },
+        "status": { "type": "string", "enum": ["PENDING", "ACCEPTED", "DECLINED", "EXPIRED", "CANCELLED"] },
+        "waveNumber": { "type": "number" },
+        "deadline": { "type": "string", "maxLength": 40 },
+        "respondedAt": { "type": "string", "maxLength": 40 },
+        "declineReason": { "type": "string", "maxLength": 200 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["requestId", "hospitalId", "donorId", "requestedBloodGroup", "status"]
+    },
+    "Donation": {
+      "title": "Donation",
+      "description": "Verified blood donation record fulfilling or partially fulfilling a blood request.",
+      "type": "object",
+      "properties": {
+        "requestId": { "type": "string", "maxLength": 128 },
+        "hospitalId": { "type": "string", "maxLength": 128 },
+        "hospitalName": { "type": "string", "maxLength": 150 },
+        "donorId": { "type": "string", "maxLength": 128 },
+        "donorName": { "type": "string", "maxLength": 100 },
+        "bloodGroup": { "type": "string", "maxLength": 10 },
+        "unitsDonated": { "type": "number" },
+        "status": { "type": "string", "enum": ["SCHEDULED", "COMPLETED", "CANCELLED"] },
+        "scheduledDate": { "type": "string", "maxLength": 40 },
+        "completedDate": { "type": "string", "maxLength": 40 },
+        "confirmedByStaff": { "type": "string", "maxLength": 100 },
+        "inventoryCredited": { "type": "boolean" },
+        "certificateId": { "type": "string", "maxLength": 100 },
+        "notes": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["hospitalId", "donorId", "bloodGroup", "unitsDonated", "status"]
+    },
+    "InventoryItem": {
+      "title": "InventoryItem",
+      "description": "Hospital blood inventory unit levels for an ABO/Rh blood group.",
+      "type": "object",
+      "properties": {
+        "hospitalId": { "type": "string", "maxLength": 128 },
+        "bloodGroup": { "type": "string", "enum": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
+        "availableUnits": { "type": "number" },
+        "reservedUnits": { "type": "number" },
+        "status": { "type": "string", "enum": ["NORMAL", "LOW", "CRITICAL"] },
+        "lastUpdated": { "type": "string", "maxLength": 40 },
+        "updatedBy": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["hospitalId", "bloodGroup", "availableUnits", "reservedUnits"]
+    },
+    "InventoryTransaction": {
+      "title": "InventoryTransaction",
+      "description": "Audit trail record for all blood inventory quantity adjustments.",
+      "type": "object",
+      "properties": {
+        "hospitalId": { "type": "string", "maxLength": 128 },
+        "bloodGroup": { "type": "string", "maxLength": 10 },
+        "type": { "type": "string", "enum": ["DONATION_CREDIT", "DISPATCH_USE", "RESERVATION", "RESERVATION_RELEASE", "MANUAL_ADJUSTMENT", "EXPIRED_DISCARD"] },
+        "quantity": { "type": "number" },
+        "previousAvailable": { "type": "number" },
+        "newAvailable": { "type": "number" },
+        "reason": { "type": "string", "maxLength": 200 },
+        "referenceId": { "type": "string", "maxLength": 128 },
+        "performedBy": { "type": "string", "maxLength": 100 },
+        "timestamp": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["hospitalId", "bloodGroup", "type", "quantity", "timestamp"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "In-app alert for user actions, request matches, and system escalations.",
+      "type": "object",
+      "properties": {
+        "recipientId": { "type": "string", "maxLength": 128 },
+        "recipientRole": { "type": "string", "enum": ["DONOR", "HOSPITAL", "ADMIN"] },
+        "type": { "type": "string", "enum": ["MATCH_REQUEST", "MATCH_ACCEPTED", "MATCH_DECLINED", "MATCH_EXPIRED", "REQUEST_ESCALATED", "DONATION_SCHEDULED", "DONATION_COMPLETED", "INVENTORY_LOW", "HOSPITAL_VERIFIED"] },
+        "title": { "type": "string", "maxLength": 150 },
+        "message": { "type": "string", "maxLength": 500 },
+        "read": { "type": "boolean" },
+        "link": { "type": "string", "maxLength": 200 },
+        "referenceId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["recipientId", "type", "title", "message", "read"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable operational and regulatory log of critical healthcare platform actions.",
+      "type": "object",
+      "properties": {
+        "action": { "type": "string", "maxLength": 100 },
+        "actorId": { "type": "string", "maxLength": 128 },
+        "actorEmail": { "type": "string", "maxLength": 150 },
+        "actorRole": { "type": "string", "maxLength": 50 },
+        "targetEntity": { "type": "string", "maxLength": 100 },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "details": { "type": "string", "maxLength": 1000 },
+        "severity": { "type": "string", "enum": ["INFO", "WARN", "CRITICAL"] },
+        "timestamp": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["action", "actorId", "targetEntity", "details", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Authenticated user documents storing global role and metadata"
+    },
+    "/donors/{donorId}": {
+      "schema": "Donor",
+      "description": "Public and matching details for registered donors keyed by user ID"
+    },
+    "/hospitals/{hospitalId}": {
+      "schema": "Hospital",
+      "description": "Registered hospital facilities keyed by user ID"
+    },
+    "/bloodRequests/{requestId}": {
+      "schema": "BloodRequest",
+      "description": "Active, escalated, and historical blood requisitions"
+    },
+    "/matches/{matchId}": {
+      "schema": "Match",
+      "description": "Targeted requests sent to specific donors for blood requirements"
+    },
+    "/donations/{donationId}": {
+      "schema": "Donation",
+      "description": "Completed and scheduled blood donations"
+    },
+    "/inventory/{inventoryId}": {
+      "schema": "InventoryItem",
+      "description": "Blood inventory reserves per hospital and blood group"
+    },
+    "/inventoryTransactions/{transactionId}": {
+      "schema": "InventoryTransaction",
+      "description": "Log of every addition, reservation, dispatch, or adjustment"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "In-app notifications for donors, hospitals, and admins"
+    },
+    "/auditLogs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Audit trails for compliance and tracking"
+    }
+  }
+}

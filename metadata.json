@@ -1,0 +1,6 @@
+{
+  "name": "LifeLink — Smart Blood Rescue Network",
+  "description": "An intelligent emergency blood-matching platform connecting donors, hospitals, and administrators with real-time compatibility matching, inventory tracking, and urgent request escalation.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
